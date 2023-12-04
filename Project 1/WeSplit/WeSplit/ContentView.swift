@@ -9,15 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     //private specifies that this is only for this particular view
-    let students = ["Omkar" , "Siddharth" , "Anuj" , "Om"]
+//    let students = ["Omkar" , "Siddharth" , "Anuj" , "Om"]
 //    @State private var selectedStudent = "Omkar"
 //    @State private var tapCount = 0
 //    @State private var name = ""
     @State private var checkAmount = 0.0
     @State private var noOfPeople = 2
     
-    @State private var tipPercentage = 20
+    @State private var tipPercentage = 0
     @FocusState private var isCheck : Bool
+    
+    @State private var totalbillAmount : Double = 0.0
     
     let tipPercentages = [10, 15, 20, 25, 0]
     
@@ -65,19 +67,29 @@ struct ContentView: View {
                 }
                 //this is called as section header we can also add a footer to it
                 Section("How much do you want to tip ?"){
-                    Picker("Tip  Percentage : " , selection: $tipPercentage){
-                        //in foreach when we are traversing through any list or something then tipPercentages is just a looping variable like for i in tipPercentage , here as i corresponds to tipPercentages
-                        ForEach(tipPercentages , id: \.self){
+                    Picker("Tip  Percentage :" , selection: $tipPercentage){
+                        //in foreach when we are traversing through any list or something  tipPercentages is a list see above
+                        ForEach(0..<101){
                             Text($0,format : .percent)
                         }
                     }
-                    .pickerStyle(.segmented)
+                    .pickerStyle(.navigationLink)
                 }
                 
+                Section("Total Bill Amount"){
+                    let personCount = Double(noOfPeople) + 2
+                    
+                    let tipSelection = Double(tipPercentage)
+                    let tipValue = checkAmount / 100 * tipSelection
+                    let totalAmount = checkAmount + tipValue
+                    Text("Total Amount : \(totalAmount)")
+                }
                 
                 Section("Amount Per Person"){
                     Text(totalPerPerson , format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                 }
+                
+               
             }
             .navigationTitle("WeSplit")
             .toolbar {
@@ -106,7 +118,7 @@ struct ContentView: View {
 //                        tapCount += 1
 //                    }
 //                }
-//                
+//
 //                Section{
 //                    Picker("Pick the Students for the Internship :" , selection: $selectedStudent){
 //                        ForEach(students , id : \.self){
@@ -116,7 +128,7 @@ struct ContentView: View {
 //                    Text("The Selected Student for the Internship \(selectedStudent)")
 //                }
 //            }
-//           
+//
 //            }
         }
         //How to create button and specify action into those buttons
